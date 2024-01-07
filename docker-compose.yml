@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  rtmp:
+    build: ./
+    ports:
+      - "1935:1935"
+      - "9080:9080"
+    container_name: rtmp_server
+    devices:
+      - /dev/fuse
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      AWS_ACCESS_KEY_ID: dfdgdfdg
+      AWS_SECRET_ACCESS_KEY: fgdgdg
+      AWS_S3_BUCKET_NAME: bisky-bucket
+      AWS_S3_REGION: ap-northeast-2
+

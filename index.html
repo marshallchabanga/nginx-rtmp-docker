@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Live Stream</title>
+    <!-- Include Tailwind CSS via CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-white">
+<div class="flex items-center justify-center h-screen">
+    <div class="max-w-screen-lg w-full">
+        <h2 class="text-3xl font-bold mb-4">Bisky Live Stream</h2>
+        <div class="flex">
+            <div class="w-4/5">
+                <video id="video" class="w-full" controls></video>
+            </div>
+            <div class="w-1/5 ml-4">
+                <!-- Dummy comments to the right -->
+                <div class="bg-gray-800 p-4 rounded">
+                    <p class="text-sm">Dummy Comment 1</p>
+                    <p class="text-sm mt-2">Dummy Comment 2</p>
+                    <p class="text-sm mt-2">Dummy Comment 3</p>
+                    <!-- Add more dummy comments as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    var video = document.getElementById("video");
+    var videoSrc = "https://bisky-live-stream.b-cdn.net/hls/test.m3u8";
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource(videoSrc);
+        hls.attachMedia(video);
+    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = videoSrc;
+    }
+</script>
+</body>
+</html>
