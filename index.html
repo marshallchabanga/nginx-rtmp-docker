@@ -32,7 +32,7 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
     var video = document.getElementById("video");
-    var videoSrc = "https://bisky-live-stream.b-cdn.net/hls/test.m3u8";
+    var videoSrc = "https://bucket-name.s3.region.amazonaws.com/hls/test.m3u8";
     if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(videoSrc);

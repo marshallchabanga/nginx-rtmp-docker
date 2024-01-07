@@ -29,7 +29,31 @@ The main purpose (and test case) to build it was to allow streaming from [**OBS 
 * For the simplest case, just run a container with this image:
 
 ```bash
-docker run -d -p 1935:1935 --name nginx-rtmp tiangolo/nginx-rtmp
+docker run -d -p 1935:1935  -e AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxx -e AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -e AWS_S3_BUCKET_NAME=xxxx-yyyy-zzzz -e AWS_S3_REGION=us-east-1 --name nginx-rtmp-s3fs marshallchabanga/nginx-rtmp-s3fs
+```
+
+* docker-compose build :
+
+```bash
+version: "3.9"
+services:
+  rtmp:
+    build: ./
+    ports:
+      - "1935:1935"
+      - "9080:9080"
+    container_name: rtmp_server
+    devices:
+      - /dev/fuse
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    environment:
+      AWS_ACCESS_KEY_ID: dfdgdfdg
+      AWS_SECRET_ACCESS_KEY: fgdgdg
+      AWS_S3_BUCKET_NAME: bisky-bucket
+      AWS_S3_REGION: ap-northeast-2
 ```
 
 ## How to test with OBS Studio and VLC
@@ -48,19 +72,26 @@ docker run -d -p 1935:1935 --name nginx-rtmp tiangolo/nginx-rtmp
 * Click the "Start Streaming" button
 
 
-* Open a [VLC](http://www.videolan.org/vlc/index.html) player (it also works in Raspberry Pi using `omxplayer`)
-* Click in the "Media" menu
-* Click in "Open Network Stream"
-* Enter the URL from above as `rtmp://<ip_of_host>/live/<key>` replacing `<ip_of_host>` with the IP of the host in which the container is running and `<key>` with the key you created in OBS Studio. For example: `rtmp://192.168.0.30/live/test`
-* Click "Play"
-* Now VLC should start playing whatever you are transmitting from OBS Studio
+# Using AWS and CloudFront
+
+### Watch Stream
+
+Access by using your S3 public URL.
+
+For example => `https://your-s3-bucket.s3.region.amazonaws.com/hls/test.m3u8`
+
+or you can set your cloudfront (cache disabled) distribution then based on your S3
+
+>  ATTENTION:
+>  Don't forget to set public access and enable CORS in your s3 bucket
+> 
 
 ## Debugging
 
 If something is not working you can check the logs of the container with:
 
 ```bash
-docker logs nginx-rtmp
+docker logs nginx-rtmp-s3fs
 ```
 
 ## Extending
@@ -68,7 +99,7 @@ docker logs nginx-rtmp
 If you need to modify the configurations you can create a file `nginx.conf` and replace the one in this image using a `Dockerfile` that is based on the image, for example:
 
 ```Dockerfile
-FROM tiangolo/nginx-rtmp
+FROM marshallchabanga/nginx-rtmp-s3fs
 
 COPY nginx.conf /etc/nginx/nginx.conf
 ```
@@ -106,6 +137,7 @@ You can start from it and modify it as you need. Here's the [documentation relat
 
 ### Latest Changes
 
+* 👷 Add S3FS Fuse (Amazon S3 Integration) by [@tiangolo](https://github.com/marshallchabanga).
 * 👷 Update token for latest changes. PR [#50](https://github.com/tiangolo/nginx-rtmp-docker/pull/50) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Action for Docker Hub description. PR [#45](https://github.com/tiangolo/nginx-rtmp-docker/pull/45) by [@tiangolo](https://github.com/tiangolo).
 * Bump tiangolo/issue-manager from 0.3.0 to 0.4.0. PR [#42](https://github.com/tiangolo/nginx-rtmp-docker/pull/42) by [@dependabot[bot]](https://github.com/apps/dependabot).
