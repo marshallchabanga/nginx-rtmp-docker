@@ -137,7 +137,7 @@ You can start from it and modify it as you need. Here's the [documentation relat
 
 ### Latest Changes
 
-* 👷 Add S3FS Fuse (Amazon S3 Integration) by [@tiangolo](https://github.com/marshallchabanga).
+* 👷 Add S3FS Fuse (Amazon S3 Integration) by [@codewithbisky](https://github.com/marshallchabanga).
 * 👷 Update token for latest changes. PR [#50](https://github.com/tiangolo/nginx-rtmp-docker/pull/50) by [@tiangolo](https://github.com/tiangolo).
 * 👷 Add GitHub Action for Docker Hub description. PR [#45](https://github.com/tiangolo/nginx-rtmp-docker/pull/45) by [@tiangolo](https://github.com/tiangolo).
 * Bump tiangolo/issue-manager from 0.3.0 to 0.4.0. PR [#42](https://github.com/tiangolo/nginx-rtmp-docker/pull/42) by [@dependabot[bot]](https://github.com/apps/dependabot).
