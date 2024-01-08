@@ -1,10 +1,8 @@
-[![Deploy](https://github.com/tiangolo/nginx-rtmp-docker/workflows/Deploy/badge.svg)](https://github.com/tiangolo/nginx-rtmp-docker/actions?query=workflow%3ADeploy)
-
 ## Supported tags and respective `Dockerfile` links
 
-* [`latest` _(Dockerfile)_](https://github.com/tiangolo/nginx-rtmp-docker/blob/master/Dockerfile)
+* [`latest` _(Dockerfile)_](https://github.com/marshallchabanga/nginx-rtmp-docker/blob/master/Dockerfile)
 
-**Note**: Note: There are [tags for each build date](https://hub.docker.com/r/tiangolo/nginx-rtmp/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `tiangolo/nginx-rtmp:latest-2020-08-16`.
+**Note**: Note: There are [tags for each build date](https://hub.docker.com/r/marshallchabanga/nginx-rtmp-s3fs/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `tiangolo/nginx-rtmp:latest-2020-08-16`.
 
 # nginx-rtmp
 
@@ -12,33 +10,32 @@
 
 ## Description
 
-This [**Docker**](https://www.docker.com/) image can be used to create an RTMP server for multimedia / video streaming using [**Nginx**](http://nginx.org/en/) and [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module), built from the current latest sources (Nginx 1.15.0 and nginx-rtmp-module 1.2.1).
+This [**Docker**](https://www.docker.com/) image can be used to create an RTMP server for multimedia / video streaming using [**Nginx**](http://nginx.org/en/), [**nginx-rtmp-module**](https://github.com/arut/nginx-rtmp-module) and [**s3fs**](https://github.com/s3fs-fuse/s3fs-fuse), built from the current latest sources (Nginx 1.15.0, nginx-rtmp-module 1.2.1 and s3fs v1.85).
 
-This was inspired by other similar previous images from [dvdgiessen](https://hub.docker.com/r/dvdgiessen/nginx-rtmp-docker/), [jasonrivers](https://hub.docker.com/r/jasonrivers/nginx-rtmp/), [aevumdecessus](https://hub.docker.com/r/aevumdecessus/docker-nginx-rtmp/) and by an [OBS Studio post](https://obsproject.com/forum/resources/how-to-set-up-your-own-private-rtmp-server-using-nginx.50/).
+This was inspired by other similar previous images from [tiangolo](https://hub.docker.com/r/tiangolo/nginx-rtmp/), [dvdgiessen](https://hub.docker.com/r/dvdgiessen/nginx-rtmp-docker/), [jasonrivers](https://hub.docker.com/r/jasonrivers/nginx-rtmp/), [aevumdecessus](https://hub.docker.com/r/aevumdecessus/docker-nginx-rtmp/) and by an [OBS Studio post](https://obsproject.com/forum/resources/how-to-set-up-your-own-private-rtmp-server-using-nginx.50/).
 
-The main purpose (and test case) to build it was to allow streaming from [**OBS Studio**](https://obsproject.com/) to different clients at the same time.
+The main purpose (and test case) to build it was to allow streaming from [**OBS Studio**](https://obsproject.com/) to different clients at the same time. Mount s3 bucket to store streaming media 
 
-**GitHub repo**: <https://github.com/tiangolo/nginx-rtmp-docker>
+Streaming using AWS CloudFront and s3 integration
 
-**Docker Hub image**: <https://hub.docker.com/r/tiangolo/nginx-rtmp/>
+Backup recordings into s3 bucket
+
+**GitHub repo**: <https://github.com/marshallchabanga/nginx-rtmp-docker>
+
+**Docker Hub image**: <https://hub.docker.com/r/marshallchabanga/nginx-rtmp-s3fs/>
 
 ## Details
 
 ## How to use
 
-* For the simplest case, just run a container with this image:
+* For the simplest case, just create a file `docker-compose.yml` and add the content below into it. Run `docker-compose build` and then `docker-compose up`
 
-```bash
-docker run -d -p 1935:1935  -e AWS_ACCESS_KEY_ID=xxxxxxxxxxxxxxxxxxxx -e AWS_SECRET_ACCESS_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -e AWS_S3_BUCKET_NAME=xxxx-yyyy-zzzz -e AWS_S3_REGION=us-east-1 --name nginx-rtmp-s3fs marshallchabanga/nginx-rtmp-s3fs
-```
-
-* docker-compose build :
 
 ```bash
 version: "3.9"
 services:
   rtmp:
-    build: ./
+    image: marshallchabanga/nginx-rtmp-s3fs
     ports:
       - "1935:1935"
       - "9080:9080"
@@ -78,7 +75,7 @@ services:
 
 Access by using your S3 public URL.
 
-For example => `https://your-s3-bucket.s3.region.amazonaws.com/hls/test.m3u8`
+For example => `https://your-s3-bucket.s3.region.amazonaws.com/test.m3u8`
 
 or you can set your cloudfront (cache disabled) distribution then based on your S3
 
@@ -112,12 +109,38 @@ rtmp_auto_push on;
 events {}
 rtmp {
     server {
-        listen 1935;
-        listen [::]:1935 ipv6only=on;
+        listen 1935; # Listen on standard RTMP port
 
         application live {
             live on;
-            record off;
+            hls on;
+            hls_path /var/tmp/hls;
+            hls_fragment 10s; # default is 5s
+            hls_playlist_length 5m; # default is 30s
+            # once playlist length is reached it deletes the oldest fragments
+
+        }
+    }
+}
+
+http {
+    server {
+        listen 9080;
+
+        location / {
+            root /www;
+        }
+
+        location /hls {
+            types {
+                application/vnd.apple.mpegurl m3u8;
+                application/octet-stream ts;
+            }
+            root /var/tmp;
+            add_header Cache-Control no-cache;
+
+            # To avoid issues with cross-domain HTTP requests (e.g. during development)
+            add_header Access-Control-Allow-Origin *;
         }
     }
 }
@@ -160,7 +183,4 @@ You can start from it and modify it as you need. Here's the [documentation relat
 
 This project is licensed under the terms of the MIT License.
 
-#### Internal
 
-* 👷 Update dependabot. PR [#55](https://github.com/tiangolo/nginx-rtmp-docker/pull/55) by [@tiangolo](https://github.com/tiangolo).
-* 👷 Update latest-changes. PR [#54](https://github.com/tiangolo/nginx-rtmp-docker/pull/54) by [@tiangolo](https://github.com/tiangolo).

@@ -32,7 +32,7 @@
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
     var video = document.getElementById("video");
-    var videoSrc = "https://bucket-name.s3.region.amazonaws.com/hls/test.m3u8";
+    var videoSrc = "https://bucket-name.s3.region.amazonaws.com/test.m3u8"; // todo update with your s3 bucket details
     if (Hls.isSupported()) {
         var hls = new Hls();
         hls.loadSource(videoSrc);
