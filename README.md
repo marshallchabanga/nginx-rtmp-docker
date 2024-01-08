@@ -148,6 +148,10 @@ http {
 
 You can start from it and modify it as you need. Here's the [documentation related to `nginx-rtmp-module`](https://github.com/arut/nginx-rtmp-module/wiki/Directives).
 
+## Spring-Boot Example
+Clone the [spring-boot example](https://gitlab.com/code-with-bisky/spring-boot-live-streaming), you can modify Dockerfile, index.html and nginx.conf in rtmp folder
+
+
 ## Technical details
 
 * This image is built from the same base official images that most of the other official images, as Python, Node, Postgres, Nginx itself, etc. Specifically, [buildpack-deps](https://hub.docker.com/_/buildpack-deps/) which is in turn based on [debian](https://hub.docker.com/_/debian/). So, if you have any other image locally you probably have the base image layers already downloaded.
