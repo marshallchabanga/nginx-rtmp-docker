@@ -2,7 +2,7 @@
 
 * [`latest` _(Dockerfile)_](https://github.com/marshallchabanga/nginx-rtmp-docker/blob/master/Dockerfile)
 
-**Note**: Note: There are [tags for each build date](https://hub.docker.com/r/marshallchabanga/nginx-rtmp-s3fs/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `tiangolo/nginx-rtmp:latest-2020-08-16`.
+**Note**: Note: There are [tags for each build date](https://hub.docker.com/r/marshallchabanga/nginx-rtmp-s3fs/tags). If you need to "pin" the Docker image version you use, you can select one of those tags. E.g. `marshallchabanga/nginx-rtmp-s3fs:latest-08-01-2024`.
 
 # nginx-rtmp
 
