@@ -53,7 +53,7 @@ services:
       AWS_S3_REGION: ap-northeast-2
 ```
 
-## How to test with OBS Studio and VLC
+## How to test with OBS Studio
 
 * Run a container with the command above
 
@@ -81,7 +81,27 @@ or you can set your cloudfront (cache disabled) distribution then based on your 
 
 >  ATTENTION:
 >  Don't forget to set public access and enable CORS in your s3 bucket
-> 
+>
+```bash
+ENABLE CORS EXAMPLE
+
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "HEAD"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": [],
+        "MaxAgeSeconds": 3000
+    }
+]
+```
 
 ## Debugging
 
