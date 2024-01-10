@@ -80,7 +80,7 @@ For example => `https://your-s3-bucket.s3.region.amazonaws.com/test.m3u8`
 or you can set your cloudfront (cache disabled) distribution then based on your S3
 
 >  ATTENTION:
->  Don't forget to set public access and enable CORS in your s3 bucket
+>  Don't forget to set public access and enable CORS in your s3 bucket. Choose us-east-1 region for now when creating a bucket
 >
 ```bash
 ENABLE CORS EXAMPLE
