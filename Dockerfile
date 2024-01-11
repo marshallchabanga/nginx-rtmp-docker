@@ -1,7 +1,7 @@
 ARG NGINX_VERSION=1.16.1
 ARG NGINX_RTMP_VERSION=1.2.1
 ARG FFMPEG_VERSION=4.2.1
-ARG S3FS_VERSION=v1.85
+ARG S3FS_VERSION=v1.93
 
 ##############################
 # Build the NGINX-build image.
@@ -56,7 +56,7 @@ RUN cd /tmp/nginx-${NGINX_VERSION} && \
 
 # Build the release image.
 FROM alpine:3.8
-LABEL MAINTAINER Efriandika Pratama <efriandika@gmail.com>
+LABEL MAINTAINER Marshall Chabanga <codewithbisky@gmail.com>
 
 RUN apk add --update \
   ca-certificates \

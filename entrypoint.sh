@@ -49,8 +49,8 @@ echo "Before s3fs mount:"
 
 ls -la /var/tmp/hls
 # s3fs mount command
-s3fs $S3FS_DEBUG $S3FS_ARGS  -o passwd_file=${AWS_S3_AUTHFILE} -o url=${AWS_S3_URL} -o endpoint=${AWS_S3_REGION} -o allow_other -o nonempty  -o umask=022 ${AWS_S3_BUCKET_NAME} ${AWS_S3_MOUNTPOINT}
-## s3fs -o passwd_file=/root/.s3fs -o endpoint=us-east-2 volatileoptions-streaming /opt/data
+s3fs $S3FS_DEBUG $S3FS_ARGS -o passwd_file=${AWS_S3_AUTHFILE} -o url=${AWS_S3_URL} -o endpoint=${AWS_S3_REGION} -o allow_other -o nonempty  -o umask=022 ${AWS_S3_BUCKET_NAME} ${AWS_S3_MOUNTPOINT}
+#s3fs $S3FS_DEBUG $S3FS_ARGS -o dbglevel=info -f -o curldbg  -o passwd_file=${AWS_S3_AUTHFILE} -o url=${AWS_S3_URL} -o endpoint=${AWS_S3_REGION} -o allow_other -o nonempty  -o umask=022 ${AWS_S3_BUCKET_NAME} ${AWS_S3_MOUNTPOINT}
 
 echo "After s3fs mount:"
 
